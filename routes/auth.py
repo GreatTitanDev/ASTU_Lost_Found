@@ -15,19 +15,19 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Register')
 
 class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[DateRequired(), Email()])
-    password = PasswordField('Password', validators=[DateRequired()])
-    submit = Submitfield('Login')
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Login')
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegistrationForm()
+    form = RegisterForm()
     if form.validate_on_submit():
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Registered Succesfully! Please Login.')
+        flash('Registered! Please login.')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
 
@@ -46,4 +46,4 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('main.index')
+    return redirect(url_for('main.index'))
