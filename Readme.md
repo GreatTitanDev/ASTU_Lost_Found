@@ -1,6 +1,6 @@
 <h1>Lost & Found for ASTU</h1>
 
-A flask website where ASTU students report lost item or claim it.
+A flask website where ASTU students/staffs report lost item or claim it.
 
 The website is built using:
 <dl>
@@ -9,6 +9,8 @@ The website is built using:
         <dt>Jinja templating, Html and CSS</dt>
         <dt>SQLite for database through SQLAlchemy</dt>
 </dtl>
+
+
 
 
               
