@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Report Item - ASTU Lost & Found{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="bi bi-plus-circle"></i> Report Lost or Found Item</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.title.label(class="form-label") }}
+                                {{ form.title(class="form-control" + (" is-invalid" if form.title.errors else "")) }}
+                                {% if form.title.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.title.errors %}{{ error }}{% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                {{ form.category.label(class="form-label") }}
+                                {{ form.category(class="form-control" + (" is-invalid" if form.category.errors else "")) }}
+                                {% if form.category.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.category.errors %}{{ error }}{% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), rows=4) }}
+                            {% if form.description.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.description.errors %}{{ error }}{% endfor %}
+                            </div>
+                            {% endif %}
+                            <small class="text-muted">Provide detailed description including color, brand, distinguishing features, etc.</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.location.label(class="form-label") }}
+                                {{ form.location(class="form-control" + (" is-invalid" if form.location.errors else ""), placeholder="e.g., Library, Cafeteria, Lab 201") }}
+                                {% if form.location.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.location.errors %}{{ error }}{% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                {{ form.date_lost_found.label(class="form-label") }}
+                                {{ form.date_lost_found(class="form-control" + (" is-invalid" if form.date_lost_found.errors else ""), type="date") }}
+                                {% if form.date_lost_found.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.date_lost_found.errors %}{{ error }}{% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.status.label(class="form-label") }}
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="status" id="status_lost" value="lost" {{ 'checked' if form.status.data == 'lost' else '' }}>
+                                <label class="btn btn-outline-danger" for="status_lost">
+                                    <i class="bi bi-exclamation-triangle"></i> Lost Item
+                                </label>
+
+                                <input type="radio" class="btn-check" name="status" id="status_found" value="found" {{ 'checked' if form.status.data == 'found' else '' }}>
+                                <label class="btn btn-outline-success" for="status_found">
+                                    <i class="bi bi-hand-thumbs-up"></i> Found Item
+                                </label>
+                            </div>
+                            {% if form.status.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.status.errors %}{{ error }}{% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            {{ form.image.label(class="form-label") }}
+                            {{ form.image(class="form-control" + (" is-invalid" if form.image.errors else "")) }}
+                            {% if form.image.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.image.errors %}{{ error }}{% endfor %}
+                            </div>
+                            {% endif %}
+                            <small class="text-muted">Upload an image (max 16MB). Allowed formats: JPG, PNG, GIF</small>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

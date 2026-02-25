@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}{{ item.title }} - ASTU Lost & Found{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            {% if item.image_filename %}
+            <img src="{{ url_for('static', filename='uploads/' + item.image_filename) }}"
+                 class="img-fluid rounded" alt="{{ item.title }}">
+            {% else %}
+            <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="height: 400px;">
+                <i class="bi bi-image text-white" style="font-size: 5rem;"></i>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <span class="badge bg-{{ 'danger' if item.status == 'lost' else 'success' }} mb-2">
+                {{ item.status|upper }}
+            </span>
+            <h1>{{ item.title }}</h1>
+            <p class="text-muted">
+                <i class="bi bi-tag"></i> {{ item.category }}<br>
+                <i class="bi bi-geo-alt"></i> {{ item.location }}<br>
+                <i class="bi bi-calendar"></i> {{ item.date_lost_found.strftime('%Y-%m-%d') }}<br>
+                <i class="bi bi-clock"></i> Reported: {{ item.created_at.strftime('%Y-%m-%d %H:%M') }}
+            </p>
+
+            <div class="mb-4">
+                <strong>Status:</strong>
+                <span class="badge bg-{{ 'secondary' if item.status == 'claimed' else 'success' if item.status == 'resolved' else 'warning' }}">
+                    {{ item.status }}
+                </span>
+            </div>
+
+            {% if item.description %}
+            <div class="mb-4">
+                <h4>Description</h4>
+                <p>{{ item.description }}</p>
+            </div>
+            {% endif %}
+
+            <div class="mb-4">
+                <strong>Reported by:</strong> {{ item.reporter.username }}
+            </div>
+
+            {% if item.status in ['lost', 'found'] and current_user.is_authenticated %}
+                {% if not is_reporter %}
+                    {% if user_claim %}
+                    <div class="alert alert-warning">
+                        <i class="bi bi-clock"></i> You have already submitted a claim for this item. Status: {{ user_claim.status }}
+                    </div>
+                    {% else %}
+                    <a href="{{ url_for('items.claim_item', item_id=item.id) }}" class="btn btn-success btn-lg">
+                        <i class="bi bi-hand-thumbs-up"></i> Claim This Item
+                    </a>
+                    {% endif %}
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> This is your item. You cannot claim it.
+                </div>
+                {% endif %}
+            {% elif not current_user.is_authenticated %}
+            <a href="{{ url_for('auth.login') }}?next={{ request.path }}" class="btn btn-success btn-lg">
+                <i class="bi bi-hand-thumbs-up"></i> Login to Claim
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Claims Section (for item owner or admin) -->
+    {% if is_reporter or (current_user.is_authenticated and current_user.is_admin()) %}
+    {% if item.claims.count() > 0 %}
+    <div class="mt-5">
+        <h3><i class="bi bi-list-ul"></i> Claims for This Item</h3>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Claimant</th>
+                        <th>Proof Description</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        {% if current_user.is_admin() %}
+                        <th>Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for claim in item.claims.all() %}
+                    <tr>
+                        <td>{{ claim.claimant.username }}</td>
+                        <td>{{ claim.proof_description }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'warning' if claim.status == 'pending' else 'success' if claim.status == 'approved' else 'danger' }}">
+                                {{ claim.status }}
+                            </span>
+                        </td>
+                        <td>{{ claim.created_at.strftime('%Y-%m-%d') }}</td>
+                        {% if current_user.is_admin() and claim.status == 'pending' %}
+                        <td>
+                            <a href="{{ url_for('admin.approve_claim', claim_id=claim.id) }}" class="btn btn-sm btn-success">Approve</a>
+                            <a href="{{ url_for('admin.reject_claim', claim_id=claim.id) }}" class="btn btn-sm btn-danger">Reject</a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
