@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - ASTU Lost & Found{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4"><i class="bi bi-speedometer2"></i> Admin Dashboard</h2>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-box-seam"></i> Total Items</h5>
+                    <h2>{{ stats.total_items }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-exclamation-triangle"></i> Lost Items</h5>
+                    <h2>{{ stats.lost_items }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-hand-thumbs-up"></i> Found Items</h5>
+                    <h2>{{ stats.found_items }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-hourglass-split"></i> Pending Claims</h5>
+                    <h2>{{ stats.pending_claims }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card bg-secondary text-white">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-check-circle"></i> Resolved</h5>
+                    <h2>{{ stats.resolved_items }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-people"></i> Total Users</h5>
+                    <h2>{{ stats.total_users }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-check2-all"></i> Approved Claims</h5>
+                    <h2>{{ stats.approved_claims }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-dark text-white">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-list-ul"></i> Total Claims</h5>
+                    <h2>{{ stats.total_claims }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Claims -->
+    <div class="card mb-4">
+        <div class="card-header bg-warning">
+            <h4 class="mb-0"><i class="bi bi-hourglass-split"></i> Pending Claims</h4>
+        </div>
+        <div class="card-body">
+            {% if pending_claims %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Claimant</th>
+                            <th>Proof</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for claim in pending_claims %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('items.item_detail', item_id=claim.item.id) }}">
+                                    {{ claim.item.title }}
+                                </a>
+                            </td>
+                            <td>{{ claim.claimant.username }}</td>
+                            <td>{{ claim.proof_description[:50] }}...</td>
+                            <td>{{ claim.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td>
+                                <a href="{{ url_for('admin.approve_claim', claim_id=claim.id) }}" class="btn btn-sm btn-success">
+                                    <i class="bi bi-check-circle"></i> Approve
+                                </a>
+                                <a href="{{ url_for('admin.reject_claim', claim_id=claim.id) }}" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-x-circle"></i> Reject
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No pending claims.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recent Items -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="bi bi-clock-history"></i> Recent Items</h4>
+        </div>
+        <div class="card-body">
+            {% if recent_items %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Reporter</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in recent_items %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('items.item_detail', item_id=item.id) }}">
+                                    {{ item.title }}
+                                </a>
+                            </td>
+                            <td>{{ item.category }}</td>
+                            <td>
+                                <span class="badge bg-{{ 'danger' if item.status == 'lost' else 'success' if item.status == 'found' else 'secondary' }}">
+                                    {{ item.status }}
+                                </span>
+                            </td>
+                            <td>{{ item.reporter.username }}</td>
+                            <td>{{ item.created_at.strftime('%Y-%m-%d') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No items yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Admin Navigation -->
+    <div class="mt-4">
+        <a href="{{ url_for('admin.manage_claims') }}" class="btn btn-primary">
+            <i class="bi bi-list-ul"></i> Manage All Claims
+        </a>
+        <a href="{{ url_for('admin.manage_items') }}" class="btn btn-secondary">
+            <i class="bi bi-box"></i> Manage All Items
+        </a>
+        <a href="{{ url_for('admin.manage_users') }}" class="btn btn-info">
+            <i class="bi bi-people"></i> Manage Users
+        </a>
+    </div>
+</div>
+{% endblock %}
