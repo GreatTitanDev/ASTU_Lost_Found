@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}About - ASTU Lost & Found{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">ASTU Digital Lost & Found System</h1>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <h3>About the Project</h3>
+            <p>
+                The ASTU Digital Lost & Found System is a web-based platform designed to help students,
+                faculty, and staff at ASTU (Adama Science and Technology University) to report,
+                search, and recover lost personal belongings on campus.
+            </p>
+
+            <h4 class="mt-4">Features</h4>
+            <ul>
+                <li>Report lost or found items with images</li>
+                <li>Search and filter items by category, location, and date</li>
+                <li>Submit claims for items you believe are yours</li>
+                <li>Admin dashboard for managing claims and items</li>
+                <li>User authentication and profile management</li>
+            </ul>
+
+            <h4 class="mt-4">Technology Stack</h4>
+            <ul>
+                <li><strong>Backend:</strong> Python Flask</li>
+                <li><strong>Database:</strong> SQLite with SQLAlchemy ORM</li>
+                <li><strong>Frontend:</strong> HTML, Bootstrap 5, Jinja2</li>
+                <li><strong>Authentication:</strong> Flask-Login</li>
+            </ul>
+
+            <h4 class="mt-4">Security Features</h4>
+            <ul>
+                <li>Password hashing with Werkzeug</li>
+                <li>CSRF protection with Flask-WTF</li>
+                <li>Role-based access control (RBAC)</li>
+                <li>Secure file upload handling</li>
+                <li>Input validation</li>
+            </ul>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Quick Links</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="{{ url_for('main.index') }}">Home</a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ url_for('items.search') }}">Search Items</a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ url_for('items.report_item') }}">Report Item</a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ url_for('auth.login') }}">Login</a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ url_for('auth.register') }}">Register</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0">Contact</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-1"><strong>Campus Security:</strong></p>
+                    <p class="mb-1">+251-XXX-XXXX</p>
+                    <p class="mb-0"><strong>Email:</strong></p>
+                    <p class="mb-0">security@astu.edu</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

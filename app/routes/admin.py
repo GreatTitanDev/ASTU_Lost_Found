@@ -25,7 +25,6 @@ def admin_required(f):
 @admin_required
 def dashboard():
     """Admin dashboard with statistics."""
-    # Get statistics
     total_items = Item.query.count()
     lost_items = Item.query.filter_by(status='lost').count()
     found_items = Item.query.filter_by(status='found').count()
