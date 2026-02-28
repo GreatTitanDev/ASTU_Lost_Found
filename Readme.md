@@ -1,3 +1,5 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # ASTU Digital Lost & Found System
 
 A FullStack web application built with Flask for reporting, searching, and claiming lost and found items at ASTU (Adama Science and Technology University).
@@ -109,4 +111,5 @@ astu_lost_found/
 
 ## License
 
-This project is for educational purposes.
+This project is licensed under the **MIT License**.  
+See the [LICENSE](LICENSE) file for full details.
