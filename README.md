@@ -10,7 +10,7 @@
 A full-stack web application built for **Adama Science and Technology University (ASTU)** to help students report, search, and claim lost and found items on campus. The system streamlines the process of reuniting students with their belongings through an intuitive interface and role-based workflow.
 
 <div align="center">
-  <img src="screenshot/img.jpeg" alt="ASTU Lost & Found System Screenshot" width="800"/>
+  <a href="https://astu-lostfound.onrender.com/"><img src="screenshot/img.jpeg" alt="ASTU Lost & Found System Screenshot" width="800"/></a>
 </div>
 
 ## Live Demo
