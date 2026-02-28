@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Search Items - ASTU Lost & Found{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4"><i class="bi bi-search"></i> Search Items</h2>
+
+    <!-- Search Form -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" action="{{ url_for('items.search') }}" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" name="q" class="form-control" placeholder="Search by title or description..." value="{{ query }}">
+                </div>
+                <div class="col-md-3">
+                    <select name="category" class="form-select">
+                        <option value="">All Categories</option>
+                        {% for cat in ['ID Cards', 'Electronics', 'Keys', 'Books', 'Calculators', 'USB Drives', 'Lab Coats', 'Bags', 'Clothing', 'Other'] %}
+                        <option value="{{ cat }}" {{ 'selected' if category == cat else '' }}>{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="status" class="form-select">
+                        <option value="">All Status</option>
+                        <option value="lost" {{ 'selected' if status == 'lost' else '' }}>Lost</option>
+                        <option value="found" {{ 'selected' if status == 'found' else '' }}>Found</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i> Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Results -->
+    {% if items %}
+    <div class="row">
+        {% for item in items %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                {% if item.image_filename %}
+                <img src="{{ url_for('static', filename='uploads/' + item.image_filename) }}"
+                     class="card-img-top" alt="{{ item.title }}">
+                {% else %}
+                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center">
+                    <i class="bi bi-image text-white" style="font-size: 3rem;"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <span class="badge bg-{{ 'danger' if item.status == 'lost' else 'success' }} mb-2">
+                        {{ item.status|upper }}
+                    </span>
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <p class="card-text text-muted">
+                        <i class="bi bi-tag"></i> {{ item.category }}<br>
+                        <i class="bi bi-geo-alt"></i> {{ item.location }}<br>
+                        <i class="bi bi-calendar"></i> {{ item.date_lost_found.strftime('%Y-%m-%d') }}
+                    </p>
+                    <a href="{{ url_for('items.item_detail', item_id=item.id) }}" class="btn btn-outline-primary btn-sm">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <i class="bi bi-info-circle"></i> No items found matching your search criteria.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
